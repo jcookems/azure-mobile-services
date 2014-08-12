@@ -31,6 +31,10 @@ namespace ZumoE2EServerApp.Models
 
         public DbSet<StringIdRoundTripTableItemForDB> StringIdRoundTripTableItemForDBs { get; set; }
 
+        public DbSet<ComplexForDB> ComplexForDBs { get; set; }
+
+        public DbSet<ComplexTypeForDB> ComplexTypeForDBs { get; set; }
+
         public DbSet<W8JSRoundTripTableItemForDB> W8JSRoundTripTableForDBs { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

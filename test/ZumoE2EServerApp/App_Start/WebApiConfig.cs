@@ -83,16 +83,12 @@ namespace ZumoE2EServerApp
 
 
                 cfg.CreateMap<StringIdRoundTripTableItemForDB, StringIdRoundTripTableItem>()
-                    .ForMember(dst => dst.Complex, map => map.Ignore())
-                    .ForMember(dst => dst.ComplexType, map => map.Ignore())
-                    .AfterMap((src, dst) =>
-                    {
-                        dst.Complex = src.ComplexSerialized == null ? null : JsonConvert.DeserializeObject<string[]>(src.ComplexSerialized);
-                        dst.ComplexType = src.ComplexTypeSerialized == null ? null : JsonConvert.DeserializeObject<string[]>(src.ComplexTypeSerialized);
-                    });
+                    .ForMember(dst => dst.Complex, map => map.MapFrom(p => p.Complex.OrderBy(q => q.Index).Select(q => q.Value)))
+                    .ForMember(dst => dst.ComplexType, map => map.MapFrom(p => p.ComplexType.OrderBy(q => q.Index).Select(q => q.Value)));
+                // Need to manually handle the inserting of dependencies in the controller.
                 cfg.CreateMap<StringIdRoundTripTableItem, StringIdRoundTripTableItemForDB>()
-                    .ForMember(dst => dst.ComplexSerialized, map => map.ResolveUsing(src => (src.Complex == null ? null : JsonConvert.SerializeObject(src.Complex))))
-                    .ForMember(dst => dst.ComplexTypeSerialized, map => map.ResolveUsing(src => (src.ComplexType == null ? null : JsonConvert.SerializeObject(src.ComplexType))));
+                    .ForMember(dst => dst.Complex, map => map.Ignore())
+                    .ForMember(dst => dst.ComplexType, map => map.Ignore());
 
                 cfg.CreateMap<W8JSRoundTripTableItemForDB, W8JSRoundTripTableItem>()
                     .ForMember(dst => dst.ComplexType, map => map.Ignore())
