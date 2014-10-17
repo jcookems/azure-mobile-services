@@ -82,24 +82,32 @@ namespace ZumoE2EServerApp.Tables
             patch.Patch(original);
             Mapper.Map<StringIdRoundTripTableItem, StringIdRoundTripTableItemForDB>(original, originalDb);
 
-            if (original.Complex != null && patch.GetChangedPropertyNames().Contains("Complex"))
+            if (patch.GetChangedPropertyNames().Contains("Complex"))
             {
-                originalDb.Complex = original.Complex.Select((s, i) => new ComplexForDB()
+                originalDb.IsComplexNull = original.Complex == null;
+                if (original.Complex != null)
                 {
-                    Id = Guid.NewGuid().ToString(),
-                    Value = s,
-                    Index = i,
-                }).ToArray();
+                    originalDb.Complex = original.Complex.Select((s, i) => new ComplexForDB()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Value = s,
+                        Index = i,
+                    }).ToArray();
+                }
             }
 
-            if (original.ComplexType != null && patch.GetChangedPropertyNames().Contains("ComplexType"))
+            if (patch.GetChangedPropertyNames().Contains("ComplexType"))
             {
-                originalDb.ComplexType = original.ComplexType.Select((s, i) => new ComplexTypeForDB()
+                originalDb.IsComplexTypeNull = original.ComplexType == null;
+                if (original.ComplexType != null)
                 {
-                    Id = Guid.NewGuid().ToString(),
-                    Value = s,
-                    Index = i,
-                }).ToArray();
+                    originalDb.ComplexType = original.ComplexType.Select((s, i) => new ComplexTypeForDB()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Value = s,
+                        Index = i,
+                    }).ToArray();
+                }
             }
 
             await this.Context.SaveChangesAsync();
@@ -115,6 +123,7 @@ namespace ZumoE2EServerApp.Tables
             }
 
             StringIdRoundTripTableItemForDB itemForDb = Mapper.Map<StringIdRoundTripTableItemForDB>(item);
+            itemForDb.IsComplexNull = item.Complex == null;
             if (item.Complex != null)
             {
                 itemForDb.Complex = item.Complex.Select((s, i) => new ComplexForDB()
@@ -125,6 +134,7 @@ namespace ZumoE2EServerApp.Tables
                 }).ToArray();
             }
 
+            itemForDb.IsComplexTypeNull = item.ComplexType == null;
             if (item.ComplexType != null)
             {
                 itemForDb.ComplexType = item.ComplexType.Select((s, i) => new ComplexTypeForDB()

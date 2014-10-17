@@ -83,8 +83,8 @@ namespace ZumoE2EServerApp
 
 
                 cfg.CreateMap<StringIdRoundTripTableItemForDB, StringIdRoundTripTableItem>()
-                    .ForMember(dst => dst.Complex, map => map.MapFrom(p => p.Complex.OrderBy(q => q.Index).Select(q => q.Value)))
-                    .ForMember(dst => dst.ComplexType, map => map.MapFrom(p => p.ComplexType.OrderBy(q => q.Index).Select(q => q.Value)));
+                    .ForMember(dst => dst.Complex, map => map.MapFrom(p => p.IsComplexNull ? null : p.Complex.OrderBy(q => q.Index).Select(q => q.Value)))
+                    .ForMember(dst => dst.ComplexType, map => map.MapFrom(p => p.IsComplexTypeNull ? null : p.ComplexType.OrderBy(q => q.Index).Select(q => q.Value)));
                 // Need to manually handle the inserting of dependencies in the controller.
                 cfg.CreateMap<StringIdRoundTripTableItem, StringIdRoundTripTableItemForDB>()
                     .ForMember(dst => dst.Complex, map => map.Ignore())

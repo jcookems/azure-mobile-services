@@ -31,6 +31,10 @@ namespace ZumoE2EServerApp.DataObjects
         public ICollection<ComplexForDB> Complex { get; set; }
 
         public ICollection<ComplexTypeForDB> ComplexType { get; set; }
+
+        public bool IsComplexNull { get; set; }
+
+        public bool IsComplexTypeNull { get; set; }
     }
 
     public class ComplexForDB : EntityData
